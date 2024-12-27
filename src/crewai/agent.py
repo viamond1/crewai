@@ -114,6 +114,10 @@ class Agent(BaseAgent):
         default=2,
         description="Maximum number of retries for an agent to execute a task when an error occurs.",
     )
+    multimodal: bool = Field(
+        default=False,
+        description="Whether the agent is multimodal.",
+    )
     code_execution_mode: Literal["safe", "unsafe"] = Field(
         default="safe",
         description="Mode for code execution: 'safe' (using Docker) or 'unsafe' (direct execution).",
@@ -405,6 +409,10 @@ class Agent(BaseAgent):
         agent_tools = AgentTools(agents=agents)
         tools = agent_tools.tools()
         return tools
+
+    def get_multimodal_tools(self):
+        from crewai.tools.agent_tools.add_image_tool import AddImageTool
+        return [AddImageTool()]
 
     def get_code_execution_tools(self):
         try:
